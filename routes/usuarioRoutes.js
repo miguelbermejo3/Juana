@@ -159,6 +159,20 @@ router.post('/:usuarioId/add-comandas-finalizadas', async (req, res) => {
   }
 });
 
-
+//get de comandas finalizadas
+router.get('/comandas-finalizadas/:usuarioId',async (req,res) =>{
+  const {usuarioId}=req.params;
+  try {
+    const usuario= await Usuario.findById(usuarioId).populate('comandasFinalizadas.platoId');
+    if(!usuario){
+      return res.status(404).json({message:"Usuario no encontrado"});
+    }
+    return res.status(200).json({comandasFinalizadas: usuario.comandasFinalizadas});
+    
+  } catch (error) {
+    console.log('Error al obtener las comandas finalizadas',error);
+    return res.status(500).json({message:'Error a obtener las comandas finalizadas'});
+  }
+})
 
 module.exports = router;
